@@ -1,0 +1,293 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <mat-tab-group mat-align-tabs="center">
+          <mat-tab label="Citas Agendadas">
+            <div class="card">
+              <div class="card-body">
+                <mat-form-field class="w-50" appearance="outline">
+                  <mat-label>Buscar por cédula, citas del cliente</mat-label>
+                  <input
+                    matInput
+                    autocomplete="off"
+                    (keyup)="applyFilter($event)"
+                    #input
+                    type="text"
+                    style="cursor: pointer; font-size: 18px"
+                  />
+                </mat-form-field>
+
+                <table
+                  mat-table
+                  table-hover
+                  style="cursor: pointer"
+                  [dataSource]="dataSource"
+                  class="mat-elevation-z2 w-100 text-center"
+                >
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="_id">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      style="text-align: center; font-size: 15px"
+                    >
+                      <strong>Código</strong>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element._id }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="date_quote">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      style="text-align: center; font-size: 15px"
+                    >
+                      <strong>Fecha</strong>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.date_quote }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Weight Column -->
+                  <ng-container matColumnDef="hour_quote">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      style="text-align: center; font-size: 15px"
+                    >
+                      <strong>Hora</strong>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.hour_quote }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="state">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      style="text-align: center; font-size: 15px"
+                    >
+                      <strong>Estado</strong>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.state }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="id_client">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      style="text-align: center; font-size: 15px"
+                    >
+                      <strong>Cédula</strong>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.id_client }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="edit">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      style="text-align: center; font-size: 15px"
+                    >
+                      <strong>Editar</strong>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <button
+                        mat-icon-button
+                        [hidden]="element.state === 'A'"
+                        color="primary"
+                      >
+                        <i (click)="EditQuotes(element)" class="material-icons"
+                          >edit</i
+                        >
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="atent">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      style="text-align: center; font-size: 15px"
+                    >
+                      <strong>Atender</strong>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <button
+                        mat-icon-button
+                        [hidden]="element.state === 'A'"
+                        color="primary"
+                      >
+                        <i
+                          (click)="CreateAttention(element)"
+                          class="material-icons"
+                          >check_circle</i
+                        >
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="delete">
+                    <th
+                      mat-header-cell
+                      *matHeaderCellDef
+                      style="text-align: center; font-size: 15px"
+                    >
+                      <strong>Eliminar</strong>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <button
+                        mat-icon-button
+                        [hidden]="element.state === 'A'"
+                        color="primary"
+                      >
+                        <i
+                          style="color: #ff5555"
+                          (click)="DeleteQuotes(element)"
+                          class="material-icons"
+                          >delete</i
+                        >
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                  ></tr>
+
+                  <!-- Row shown when there is no matching data. -->
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">
+                      No data matching the filter "{{ input.value }}"
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div></mat-tab
+          >
+          <mat-tab label="Agendar Cita"
+            ><div class="card">
+              <div class="card-body">
+                <p>Seleccionar Cliente</p>
+                <form [formGroup]="formScheduleQuote" class="w-100">
+                  <mat-form-field appearance="outline">
+                    <mat-label style="color: #000000"
+                      >Seleccione un cliente</mat-label
+                    >
+                    <mat-select name="food" formControlName="id_client">
+                      <mat-option
+                        *ngFor="let food of clients"
+                        [value]="food.number_id"
+                      >
+                        {{ food.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-hint style="color: #000000; width: 100%"></mat-hint>
+                    <mat-error
+                      style="color: red"
+                      *ngIf="
+                        this.father.GroupFormGeneralisControlHasError(
+                          this.formScheduleQuote,
+                          'id_client',
+                          this.formScheduleQuoteErrors
+                        )
+                      "
+                      >{{ this.formScheduleQuoteErrors.id_client }}</mat-error
+                    >
+                  </mat-form-field>
+                </form>
+                <br />
+                <div
+                  *ngIf="selectedDate === null || selectedHour === null"
+                  class="alert alert-danger"
+                  role="alert"
+                >
+                  * Obligatorio Seleccionar Hora y fecha de la cita
+                </div>
+                <br />
+                <div class="row justify-content-center">
+                  <div class="col-12 col-lg-5 col-md-5 text-center">
+                    <mat-card
+                      style="max-width: 350px"
+                      class="demo-inline-calendar-card mx-auto"
+                    >
+                      <mat-calendar
+                        (selectedChange)="SelectedDate($event)"
+                      ></mat-calendar>
+                    </mat-card>
+                    <br />
+                    <span class="mt-3" style="font-size: 20px"
+                      ><strong
+                        >Fecha seleccionada: {{ selectedDate }}
+                      </strong></span
+                    >
+                  </div>
+                  <div class="col-12 col-lg-6 col-md-6 mt-4">
+                    <div
+                      class="
+                        row
+                        justify-content-center
+                        justify-content-lg-start
+                        justify-content-md-start
+                      "
+                    >
+                      <div
+                        *ngFor="let item of hourAvaibles"
+                        class="col-3 col-2-lg text-center"
+                        style="
+                          background: #5c95ff;
+                          color: #ffffff;
+                          margin: 1px;
+                          cursor: pointer;
+                          max-width: 100px;
+                        "
+                        (click)="SelectHour($event.target.innerText)"
+                      >
+                        {{ item }}
+                      </div>
+                    </div>
+                    <br />
+                    <span class="mt-3" style="font-size: 20px"
+                      ><strong
+                        >Hora seleccionada: {{ selectedHour }}
+                      </strong></span
+                    >
+                  </div>
+                </div>
+
+                <div class="row justify-content-center mt-4">
+                  <div class="col-12 col-lg-4 col-md-6">
+                    <button
+                      (click)="CreateQuotes()"
+                      type="button"
+                      class="btn btn-success w-100"
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,328 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <mat-tab-group mat-align-tabs="center">
+          <mat-tab label="Listado de Clientes">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" style="cursor: pointer">
+                    <thead class="text-center text-primary">
+                      <th scope="col" class="text-dark">Cédula</th>
+                      <th scope="col" class="text-dark">Nombre</th>
+                      <th scope="col" class="text-dark">Fecha de Nacimiento</th>
+                      <th scope="col" class="text-dark">Correo Electrónico</th>
+                      <th scope="col" class="text-dark">Número Celular</th>
+                      <th scope="col" class="text-dark">Dirección</th>
+                      <th scope="col" class="text-dark">Editar</th>
+                      <th scope="col" class="text-dark">Eliminar</th>
+                    </thead>
+                    <tbody>
+                      <tr
+                        class="text-center"
+                        *ngFor="let item of clients"
+                        [class.active]="item == selectedClient"
+                      >
+                        <td>{{ item.number_id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.birthday }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.phone }}</td>
+                        <td>{{ item.address }}</td>
+                        <td>
+                          <i (click)="EditClient(item)" class="material-icons"
+                            >edit</i
+                          >
+                        </td>
+                        <td>
+                          <i
+                            (click)="DeleteClient(item)"
+                            class="material-icons"
+                            style="color: rgb(236, 72, 72)"
+                            >delete</i
+                          >
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div></mat-tab
+          >
+          <mat-tab label="Añadir Cliente">
+            <div class="div card mt-3">
+              <div class="card-body">
+                <div class="form-group mt-4">
+                  <form [formGroup]="formCreateClient" class="w-100">
+                    <div class="row justify-content-center">
+                      <div class="col-12 col-lg-4 col-md-6">
+                        <mat-form-field
+                          style="cursor: pointer"
+                          appearance="outline"
+                          class="w-100"
+                        >
+                          <mat-label style="color: #7e7d7d"
+                            >Número de Cédula</mat-label
+                          >
+
+                          <input
+                            style="
+                              cursor: pointer;
+                              text-align: center;
+                              font-size: 18px;
+                            "
+                            matInput
+                            type="tel"
+                            formControlName="number_id"
+                            autocomplete="off"
+                          />
+                          <mat-hint
+                            style="color: #000000; width: 100%"
+                          ></mat-hint>
+                          <mat-error
+                            style="color: red"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formCreateClient,
+                                'number_id',
+                                this.formCreateClientErrors
+                              )
+                            "
+                            >{{
+                              this.formCreateClientErrors.number_id
+                            }}</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                      <div class="col-12 col-lg-4 col-md-6">
+                        <mat-form-field
+                          style="cursor: pointer"
+                          appearance="outline"
+                          class="w-100"
+                        >
+                          <mat-label style="color: #7e7d7d">Nombre</mat-label>
+
+                          <input
+                            style="
+                              cursor: pointer;
+                              text-align: center;
+                              font-size: 18px;
+                            "
+                            matInput
+                            type="text"
+                            formControlName="name"
+                            autocomplete="off"
+                          />
+                          <mat-hint style="color: #000000; width: 100%">
+                          </mat-hint>
+                          <mat-error
+                            style="color: red"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formCreateClient,
+                                'name',
+                                this.formCreateClientErrors
+                              )
+                            "
+                            >{{ this.formCreateClientErrors.name }}</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row justify-content-center">
+                      <div class="col-12 col-lg-4 col-md-6">
+                        <mat-form-field
+                          style="cursor: pointer"
+                          appearance="outline"
+                          class="w-100"
+                        >
+                          <mat-label style="color: #7e7d7d"
+                            >Fecha de Nacimiento</mat-label
+                          >
+
+                          <input
+                            style="
+                              cursor: pointer;
+                              text-align: center;
+                              font-size: 18px;
+                              color: #000000;
+                            "
+                            readonly
+                            matInput
+                            (click)="picker.open()"
+                            (focus)="picker.open()"
+                            [matDatepicker]="picker"
+                            formControlName="birthday"
+                            autocomplete="off"
+                          />
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="picker"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker
+                            #picker
+                            disabled="false"
+                          ></mat-datepicker>
+
+                          <mat-hint
+                            style="color: #000000; width: 100%"
+                          ></mat-hint>
+
+                          <mat-error
+                            style="color: red"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formCreateClient,
+                                'birthday',
+                                this.formCreateClientErrors
+                              )
+                            "
+                            >{{
+                              this.formCreateClientErrors.birthday
+                            }}</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                      <div class="col-12 col-lg-4 col-md-6">
+                        <mat-form-field
+                          style="cursor: pointer"
+                          appearance="outline"
+                          class="w-100"
+                        >
+                          <mat-label style="color: #7e7d7d"
+                            >Correo Electrónico</mat-label
+                          >
+
+                          <input
+                            style="
+                              cursor: pointer;
+                              text-align: center;
+                              font-size: 18px;
+                            "
+                            matInput
+                            type="text"
+                            formControlName="email"
+                            autocomplete="off"
+                          />
+                          <mat-hint
+                            style="color: #000000; width: 100%"
+                          ></mat-hint>
+                          <mat-error
+                            style="color: red"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formCreateClient,
+                                'email',
+                                this.formCreateClientErrors
+                              )
+                            "
+                            >{{ this.formCreateClientErrors.email }}</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row justify-content-center">
+                      <div class="col-12 col-lg-4 col-md-6">
+                        <mat-form-field
+                          style="cursor: pointer"
+                          appearance="outline"
+                          class="w-100"
+                        >
+                          <mat-label style="color: #7e7d7d"
+                            >Número de Celular</mat-label
+                          >
+
+                          <input
+                            style="
+                              cursor: pointer;
+                              text-align: center;
+                              font-size: 18px;
+                            "
+                            matInput
+                            type="tel"
+                            formControlName="phone"
+                            autocomplete="off"
+                          />
+                          <mat-hint style="color: #000000; width: 100%">
+                          </mat-hint>
+                          <mat-error
+                            style="color: red"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formCreateClient,
+                                'phone',
+                                this.formCreateClientErrors
+                              )
+                            "
+                            >{{ this.formCreateClientErrors.phone }}</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                      <div class="col-12 col-lg-4 col-md-6">
+                        <mat-form-field
+                          style="cursor: pointer"
+                          appearance="outline"
+                          class="w-100"
+                        >
+                          <mat-label style="color: #7e7d7d"
+                            >Dirección</mat-label
+                          >
+
+                          <input
+                            style="
+                              cursor: pointer;
+                              text-align: center;
+                              font-size: 18px;
+                            "
+                            matInput
+                            type="text"
+                            formControlName="address"
+                            autocomplete="off"
+                          />
+                          <mat-hint
+                            style="color: #000000; width: 100%"
+                          ></mat-hint>
+                          <mat-error
+                            style="color: red"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formCreateClient,
+                                'address',
+                                this.formCreateClientErrors
+                              )
+                            "
+                            >{{
+                              this.formCreateClientErrors.address
+                            }}</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </form>
+
+                  <div class="row justify-content-center">
+                    <div class="col-12 col-lg-4 col-md-6">
+                      <button type="button" class="btn btn-danger w-100">
+                        Limpiar
+                      </button>
+                    </div>
+                    <div class="col-12 col-lg-4 col-md-6">
+                      <button
+                        (click)="CreateClient()"
+                        type="button"
+                        class="btn btn-success w-100"
+                      >
+                        Guardar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>

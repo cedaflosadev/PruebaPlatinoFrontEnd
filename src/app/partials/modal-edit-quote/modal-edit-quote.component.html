@@ -1,0 +1,67 @@
+<div class="container">
+  <div class="row justify-content-center uploader-status">
+    <div class="col-12 text-center">
+      <h3 class="text-dark">
+        <strong>
+          ¿ Reasignar la cita {{ data._id }}, con fecha {{ data.date_quote }} y
+          hora {{ data.hour_quote }} ?</strong
+        >
+      </h3>
+    </div>
+  </div>
+
+  <div class="form-group mt-4">
+    <form [formGroup]="formUpdateQuotes" class="w-100">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <mat-form-field
+            style="cursor: pointer"
+            appearance="outline"
+            class="w-100"
+          >
+            <mat-label style="color: #7e7d7d">Número de Cédula</mat-label>
+            <mat-select name="food" formControlName="id_client">
+              <mat-option *ngFor="let food of clients" [value]="food.number_id">
+                {{ food.name }}
+              </mat-option>
+            </mat-select>
+
+            <mat-hint style="color: #000000; width: 100%"></mat-hint>
+            <mat-error
+              style="color: red"
+              *ngIf="
+                this.GroupFormGeneralisControlHasError(
+                  this.formUpdateQuotes,
+                  'id_client',
+                  this.formUpdateQuotesErrors
+                )
+              "
+              >{{ this.formUpdateQuotesErrors.id_client }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row justify-content-end uploader-status">
+    <div class="col-6 col-lg-3 col-md-6">
+      <button
+        (click)="CloseModal(false)"
+        type="button"
+        class="btn btn-danger w-100"
+      >
+        No
+      </button>
+    </div>
+    <div class="col-6 col-lg-3 col-md-6">
+      <button
+        (click)="CloseModal(true)"
+        type="button"
+        class="btn btn-success w-100"
+      >
+        Si
+      </button>
+    </div>
+  </div>
+</div>

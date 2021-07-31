@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="row justify-content-center uploader-status">
+    <div class="col-12 text-center">
+      <h3 class="text-dark">
+        <strong> ¿ Desea Atender la cita {{ data._id }}?</strong>
+      </h3>
+    </div>
+  </div>
+
+  <div class="row justify-content-center uploader-status">
+    <div class="col-6">
+      <span><strong>Cédula</strong></span>
+    </div>
+    <div class="col-6 text-right">
+      <span>{{ data.id_client }}</span>
+    </div>
+    <div class="col-6">
+      <span><strong>Fecha</strong></span>
+    </div>
+    <div class="col-6 text-right">
+      <span>{{ data.date_quote }}</span>
+    </div>
+    <div class="col-6">
+      <span><b>Hora</b></span>
+    </div>
+    <div class="col-6 text-right">
+      <span>{{ data.hour_quote }}</span>
+    </div>
+  </div>
+
+  <div class="form-group mt-4">
+    <form [formGroup]="formUpdateQuotes" class="w-100">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <mat-form-field
+            style="cursor: pointer"
+            appearance="outline"
+            class="w-100"
+          >
+            <mat-label style="color: #7e7d7d">Motivo de atención</mat-label>
+            <input
+            style="cursor: pointer; text-align: center; font-size: 18px"
+            matInput
+            type="text"
+            formControlName="description"
+            autocomplete="off"
+          />
+
+            <mat-hint style="color: #000000; width: 100%"></mat-hint>
+            <mat-error
+              style="color: red"
+              *ngIf="
+                this.GroupFormGeneralisControlHasError(
+                  this.formUpdateQuotes,
+                  'description',
+                  this.formUpdateQuotesErrors
+                )
+              "
+              >{{ this.formUpdateQuotesErrors.description }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row justify-content-end uploader-status">
+    <div class="col-6 col-lg-3 col-md-6">
+      <button
+        (click)="CloseModal(false)"
+        type="button"
+        class="btn btn-danger w-100"
+      >
+        No
+      </button>
+    </div>
+    <div class="col-6 col-lg-3 col-md-6">
+      <button
+        (click)="CloseModal(true)"
+        type="button"
+        class="btn btn-success w-100"
+      >
+        Si
+      </button>
+    </div>
+  </div>
+</div>

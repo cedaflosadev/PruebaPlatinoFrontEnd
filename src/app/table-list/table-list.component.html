@@ -1,0 +1,82 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <mat-form-field class="w-50" appearance="outline">
+              <mat-label>Buscar Atencion ...</mat-label>
+              <input
+                matInput
+                autocomplete="off"
+                (keyup)="applyFilter($event)"
+                #input
+                type="text"
+                style="cursor: pointer; font-size: 18px"
+              />
+            </mat-form-field>
+            <table
+              mat-table
+              table-hover
+              style="cursor: pointer"
+              [dataSource]="dataSource"
+              class="mat-elevation-z2 w-100 text-center"
+            >
+              <!-- Position Column -->
+              <ng-container matColumnDef="id_client">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="text-align: center; font-size: 15px"
+                >
+                  <strong>Cédula</strong>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.id_client }}
+                </td>
+              </ng-container>
+
+              <!-- Position Column -->
+              <ng-container matColumnDef="description">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="text-align: center; font-size: 15px"
+                >
+                  <strong>Servicio Atendido</strong>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.description }}
+                </td>
+              </ng-container>
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="attention_date">
+                  <th
+                    mat-header-cell
+                    *matHeaderCellDef
+                    style="text-align: center; font-size: 15px"
+                  >
+                    <strong>Fecha de Atención</strong>
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.attention_date }}
+                  </td>
+                </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+              <!-- Row shown when there is no matching data. -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                  No data matching the filter "{{ input.value }}"
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
