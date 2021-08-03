@@ -11,6 +11,8 @@ import { ModalEditQuoteComponent } from "app/partials/modal-edit-quote/modal-edi
 import { ModalAttentQuoteComponent } from "app/partials/modal-attent-quote/modal-attent-quote.component";
 import { AttentionsService } from "app/core/services/attentions.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ClientsModel } from "app/core/models/client.model";
+import { debounceTime } from "rxjs-compat/operator/debounceTime";
 
 @Component({
   selector: "app-user-profile",
@@ -21,8 +23,10 @@ export class UserProfileComponent implements OnInit {
   public formSearch: FormGroup;
   public formScheduleQuote: FormGroup;
   public quotes = [];
-  public clients = [];
+  public clients: any;
+  public clientsIds: any[];
   public formScheduleQuoteErrors: QuotesModel = new QuotesModel();
+  public filteredOptions: any;
 
   displayedColumns: string[] = [
     "_id",
@@ -72,9 +76,9 @@ export class UserProfileComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.CreateForm();
     this.GetQuotes();
     this.GetAllClients();
+    this.CreateForm();
   }
 
   public applyFilter(event: Event) {
@@ -99,6 +103,24 @@ export class UserProfileComponent implements OnInit {
         [Validators.required, this.father.ValidIDFormControl],
       ],
     });
+
+    this.formScheduleQuote.controls["id_client"].valueChanges.subscribe(
+      (response: string) => {
+        if (response && response.length) {
+          this.filterData(response);
+        } else {
+          this.filteredOptions = [];
+        }
+      }
+    );
+  }
+
+  public filterData(enteredData) {
+    this.filteredOptions = this.clients.filter((item) => {
+      return (
+        item.number_id.toLowerCase().indexOf(enteredData.toLowerCase()) > -1
+      );
+    });
   }
 
   public GetAllClients() {
@@ -113,14 +135,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   public SelectHour(hour: any) {
-    console.log(hour);
     this.selectedHour = hour;
     this.formScheduleQuote.controls["hour_quote"].setValue(this.selectedHour);
   }
 
   public GetQuotes() {
     this.quotesService.getQuotes().subscribe((data) => {
-      console.log(data);
       this.quotes = data.data;
 
       this.dataSource = new MatTableDataSource(this.quotes);
@@ -134,12 +154,9 @@ export class UserProfileComponent implements OnInit {
       data: element,
     });
     dialogRef3.afterClosed().subscribe((result) => {
-      console.log(result);
       if (result !== false) {
         this.quotesService.updateQuotes(result).subscribe((data) => {
           if (data) {
-            console.log(data);
-            // alert(data.mensaje);
             this.openSnackBar(data.mensaje, "Continuar");
           }
           if (data.transaccion) {
@@ -159,7 +176,6 @@ export class UserProfileComponent implements OnInit {
   public DeleteQuotes(element: QuotesModel) {
     this.quotesService.deleteQuotes(element).subscribe((data) => {
       if (data) {
-        // alert(data.mensaje);
         this.openSnackBar(data.mensaje, "Continuar");
       }
       if (data.transaccion) {
@@ -174,7 +190,6 @@ export class UserProfileComponent implements OnInit {
         .createQuotes(this.formScheduleQuote.value)
         .subscribe((data) => {
           if (data) {
-            // alert(data.mensaje);
             this.openSnackBar(data.mensaje, "Continuar");
           }
           if (data.transaccion) {
@@ -196,12 +211,10 @@ export class UserProfileComponent implements OnInit {
       if (result !== false) {
         this.attentionsServices.createAttentions(result).subscribe((data) => {
           if (data.transaccion) {
-            console.log(result.id_quote);
             this.quotesService
               .updateStateQuotes({ id_quote: result.id_quote })
               .subscribe((data1) => {
                 if (data1) {
-                  // alert(data1.mensaje);
                   this.openSnackBar(data1.mensaje, "Continuar");
                 }
                 if (data1.transaccion) {
@@ -212,7 +225,5 @@ export class UserProfileComponent implements OnInit {
         });
       }
     });
-
-    console.log(element);
   }
 }

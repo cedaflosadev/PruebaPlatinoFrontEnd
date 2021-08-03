@@ -46,8 +46,10 @@ export class ModalEditUserComponent implements OnInit {
               if (data.data.length === 0) {
                 this.dialogRef.close(this.formUpdateClient.value);
               } else {
-                // alert("Número de Cédula ya registrado");
-                this.openSnackBar("Número de Cédula ya registrado", "Continuar");
+                this.openSnackBar(
+                  "Número de Cédula ya registrado",
+                  "Continuar"
+                );
               }
             });
         }

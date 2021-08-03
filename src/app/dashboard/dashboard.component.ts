@@ -88,7 +88,6 @@ export class DashboardComponent implements OnInit {
       .createClient(this.formCreateClient.value)
       .subscribe((data) => {
         if (data) {
-          // alert(data.mensaje);
           this.openSnackBar(data.mensaje, "Continuar");
         }
         if (data.transaccion) {
@@ -131,7 +130,6 @@ export class DashboardComponent implements OnInit {
   public ConfirmEditClient(clientUpdate: ClientsModel) {
     this.clientService.updateClient(clientUpdate).subscribe((data) => {
       if (data) {
-        // alert(data.mensaje);
         this.openSnackBar(data.mensaje, "Continuar");
       }
       if (data.transaccion) {
@@ -150,7 +148,6 @@ export class DashboardComponent implements OnInit {
       if (result) {
         this.clientService.deleteClient(item).subscribe((data) => {
           if (data) {
-            // alert(data.mensaje);
             this.openSnackBar(data.mensaje, "Continuar");
           }
           if (data.transaccion) {

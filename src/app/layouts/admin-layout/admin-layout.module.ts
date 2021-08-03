@@ -22,6 +22,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatTableModule } from "@angular/material/table";
 import { MatCardModule } from "@angular/material/card";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatTableModule,
     MatCardModule,
     MatSnackBarModule,
+    MatAutocompleteModule,
   ],
   declarations: [
     DashboardComponent,
