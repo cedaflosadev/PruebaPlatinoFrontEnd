@@ -13,6 +13,7 @@ import { AttentionsService } from "app/core/services/attentions.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ClientsModel } from "app/core/models/client.model";
 import { debounceTime } from "rxjs-compat/operator/debounceTime";
+import { TimeLocalService } from "app/core/services/time.service";
 
 @Component({
   selector: "app-user-profile",
@@ -27,6 +28,7 @@ export class UserProfileComponent implements OnInit {
   public clientsIds: any[];
   public formScheduleQuoteErrors: QuotesModel = new QuotesModel();
   public filteredOptions: any;
+  public dateNow: Date;
 
   displayedColumns: string[] = [
     "_id",
@@ -70,6 +72,7 @@ export class UserProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private quotesService: QuotesService,
     private clientService: ClientService,
+    private timeLocalService: TimeLocalService,
     private attentionsServices: AttentionsService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
@@ -78,6 +81,7 @@ export class UserProfileComponent implements OnInit {
   ngOnInit() {
     this.GetQuotes();
     this.GetAllClients();
+    this.GetDateNow();
     this.CreateForm();
   }
 
@@ -120,6 +124,13 @@ export class UserProfileComponent implements OnInit {
       return (
         item.number_id.toLowerCase().indexOf(enteredData.toLowerCase()) > -1
       );
+    });
+  }
+
+  public GetDateNow() {
+    this.timeLocalService.getDateNow().subscribe((data) => {
+      console.log(data);
+      // this.dateNow = new Date(data.data);
     });
   }
 

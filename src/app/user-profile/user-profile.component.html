@@ -235,7 +235,11 @@
                       style="max-width: 350px"
                       class="demo-inline-calendar-card mx-auto"
                     >
-                      <mat-calendar (selectedChange)="SelectedDate($event)">
+                      <mat-calendar
+                        [selected]="selectedDate"
+                        [minDate]="dateNow"
+                        (selectedChange)="SelectedDate($event)"
+                      >
                       </mat-calendar>
                     </mat-card>
                     <br />
