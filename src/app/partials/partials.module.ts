@@ -1,11 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { SpinnerWaitComponent } from "./spinner-wait/spinner-wait.component";
-
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { ModalCreateUserComponent } from "./modal-create-user/modal-create-user.component";
-import { ModalEditUserComponent } from "./modal-edit-user/modal-edit-user.component";
-import { ModalDeleteUserComponent } from "./modal-delete-user/modal-delete-user.component";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule, MatRippleModule } from "@angular/material/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -18,20 +13,12 @@ import { AdminLayoutRoutes } from "app/layouts/admin-layout/admin-layout.routing
 import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatTabsModule } from "@angular/material/tabs";
-import { ModalConfirmEditUserComponent } from "./modal-confirm-edit-user/modal-confirm-edit-user.component";
-import { ModalEditQuoteComponent } from "./modal-edit-quote/modal-edit-quote.component";
-import { ModalAttentQuoteComponent } from "./modal-attent-quote/modal-attent-quote.component";
+import { ModalEditPlanComponent } from "./account-plan/modal-edit-plan/modal-edit-plan.component";
+import { ModalConfirmDeletePlanComponent } from "./account-plan/modal-confirm-delete-plan/modal-confirm-delete-plan.component";
+import { ModalReactiveAccountComponent } from './account-plan/modal-reactive-account/modal-reactive-account.component';
 
 @NgModule({
-  declarations: [
-    SpinnerWaitComponent,
-    ModalCreateUserComponent,
-    ModalEditUserComponent,
-    ModalConfirmEditUserComponent,
-    ModalDeleteUserComponent,
-    ModalEditQuoteComponent,
-    ModalAttentQuoteComponent
-  ],
+  declarations: [ModalEditPlanComponent, ModalConfirmDeletePlanComponent, ModalReactiveAccountComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(AdminLayoutRoutes),

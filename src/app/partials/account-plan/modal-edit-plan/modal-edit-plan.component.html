@@ -1,0 +1,131 @@
+<div class="container">
+  <div class="row justify-content-center uploader-status">
+    <div (click)="CloseModal(false)" class="col-12 text-right">
+      <span style="cursor: pointer">
+        <i class="material-icons text-danger">close</i></span
+      >
+    </div>
+  </div>
+  <div class="row justify-content-center uploader-status">
+    <div class="col-12 text-center">
+      <h3 class="text-dark">
+        <span>Editar Cuenta</span> <strong> "{{ data.name_account }}"</strong>
+      </h3>
+    </div>
+  </div>
+
+  <div class="form-group mt-4">
+    <form [formGroup]="formUpdateAccount" class="w-100">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="text-muted">Código</mat-label>
+
+            <input
+              style="font-size: 18px"
+              class="text-center"
+              matInput
+              type="tel"
+              formControlName="id_account"
+              autocomplete="off"
+            />
+            <mat-hint class="w-100 text-dark"></mat-hint>
+            <mat-error
+              class="text-danger"
+              *ngIf="
+                this.GroupFormGeneralisControlHasError(
+                  this.formUpdateAccount,
+                  'id_account',
+                  this.formUpdateAccountErrors
+                )
+              "
+              >{{ this.formUpdateAccountErrors.id_account }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="text-muted">Tipo</mat-label>
+
+            <mat-select
+              [(ngModel)]="selected"
+              formControlName="id_type_account"
+              style="font-size: 18px"
+              class="text-center"
+            >
+              <mat-option class="text-center ">
+                <strong>-- Selecione Tipo de Cuenta --</strong></mat-option
+              >
+              <mat-option
+                class="text-center "
+                *ngFor="let item of typesAccount"
+                value="{{ item.id_type_account }}"
+                >{{ item.desc_type_account }}</mat-option
+              >
+            </mat-select>
+            <mat-hint class="w-100 text-dark"> </mat-hint>
+            <mat-error
+              class="text-danger"
+              *ngIf="
+                this.GroupFormGeneralisControlHasError(
+                  this.formUpdateAccount,
+                  'id_type_account',
+                  this.formUpdateAccountErrors
+                )
+              "
+              >{{ this.formUpdateAccountErrors.id_type_account }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="text-muted">Nombre</mat-label>
+
+            <input
+              style="font-size: 18px"
+              class="text-center"
+              matInput
+              type="text"
+              formControlName="name_account"
+              autocomplete="off"
+            />
+            <mat-hint class="w-100 text-dark"> </mat-hint>
+            <mat-error
+              class="text-danger"
+              *ngIf="
+                this.GroupFormGeneralisControlHasError(
+                  this.formUpdateAccount,
+                  'name_account',
+                  this.formUpdateAccountErrors
+                )
+              "
+              >{{ this.formUpdateAccountErrors.name_account }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row justify-content-center uploader-status">
+    <div class="col-12 col-lg-5 col-md-6">
+      <button
+        (click)="CloseModal(false)"
+        type="button"
+        class="btn btn-danger w-100"
+      >
+        Cancelar
+      </button>
+    </div>
+    <div class="col-12 col-lg-5 col-md-6">
+      <button
+        (click)="CloseModal(true)"
+        type="button"
+        class="btn btn-success w-100"
+      >
+        Guardar Cambios
+      </button>
+    </div>
+  </div>
+</div>

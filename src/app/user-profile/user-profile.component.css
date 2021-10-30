@@ -1,0 +1,49 @@
+::ng-deep .mat-tab-label .mat-tab-label-content {
+  font-size: 18px;
+}
+
+::ng-deep .mat-tooltip {
+  font-size: 18px;
+}
+
+.text-size-18px {
+  font-size: 18px;
+}
+.color-toooltip-text {
+  color: #2039c7;
+}
+
+.max-width-input-forms-add {
+  max-width: 500px;
+}
+
+.max-width-buttons-forms-add {
+  max-width: 250px;
+}
+
+.max-width-search-input {
+  max-width: 400px;
+}
+.max-height-300 {
+  max-height: 350px;
+}
+.min-width-600 {
+  min-width: 600px;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+input[disabled] {
+  color: #000000;
+}
+@media (max-width: 570px) {
+  .max-width-buttons-forms-add {
+    max-width: none;
+  }
+}
+.customWidthClass{
+  flex: 0 0 75px;
+}
+.max-width-buttons-add-mov {
+  max-width: 250px;
+}

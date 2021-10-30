@@ -1,16 +1,22 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-
-import { ClientsModel } from "app/core/models/client.model";
-import { ClientService } from "app/core/services/client.service";
 import { AdminLayoutComponent } from "app/layouts/admin-layout/admin-layout.component";
-import { MatDialog, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { SpinnerWaitComponent } from "app/partials/spinner-wait/spinner-wait.component";
-import { ModalCreateUserComponent } from "app/partials/modal-create-user/modal-create-user.component";
-import { ModalEditUserComponent } from "app/partials/modal-edit-user/modal-edit-user.component";
-import { ModalConfirmEditUserComponent } from "app/partials/modal-confirm-edit-user/modal-confirm-edit-user.component";
-import { ModalDeleteUserComponent } from "app/partials/modal-delete-user/modal-delete-user.component";
+import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { AccountingsService } from "app/core/services/accounting.service";
+import { MatTableDataSource } from "@angular/material/table";
+import { TypeAccountingService } from "app/core/services/type-account.service";
+import { ModalEditPlanComponent } from "../partials/account-plan/modal-edit-plan/modal-edit-plan.component";
+import { AccountModel } from "app/core/models/account.model";
+import { ModalConfirmDeletePlanComponent } from "../partials/account-plan/modal-confirm-delete-plan/modal-confirm-delete-plan.component";
+import { TypeAccountModel } from "app/core/models/types-account.model";
+
+import { StatesGlobalModel } from "../core/models/states-global.model";
+import { StatesGlobalService } from "app/core/services/state-global.service";
+import { filterTableAccounts } from "app/core/models/filter-data-accounting.model";
+import { ModalReactiveAccountComponent } from "app/partials/account-plan/modal-reactive-account/modal-reactive-account.component";
+import { MatSort } from "@angular/material/sort";
+import { TypeAccountSeatService } from "app/core/services/type-account-seat.service";
 
 @Component({
   selector: "app-dashboard",
@@ -18,22 +24,118 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   styleUrls: ["./dashboard.component.css"],
 })
 export class DashboardComponent implements OnInit {
-  public clients = [];
+  // * Valores parametrizados
+  public numberStringStates: number = 1;
+  public selectedTab: number;
+  public formCreateAccount: FormGroup;
+  public formFilterData: FormGroup;
+  public typesAccount: TypeAccountModel[];
+  public statesGlobal: StatesGlobalModel[];
+  public typesAccountSeat: any[];
 
-  public formCreateClient: FormGroup;
-  public formCreateClientErrors: ClientsModel = new ClientsModel();
+  public filteredValues = {
+    id_account: "",
+    id_type_account: "",
+    name_account: "",
+  };
+  public formCreateClientErrors: AccountModel = new AccountModel();
+  public dataSource: MatTableDataSource<AccountModel> =
+    new MatTableDataSource();
+  public displayedColumns: string[] = [
+    "id_account",
+    "type_account",
+    "name_account",
+    "desc_type_account_seat",
+    "edit",
+    "delete",
+  ];
 
   constructor(
-    private clientService: ClientService,
+    private accountingService: AccountingsService,
     private formBuilder: FormBuilder,
     public father: AdminLayoutComponent,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private typeAccountService: TypeAccountingService,
+    private stateGlobalService: StatesGlobalService,
+    private typeAccountSeatService: TypeAccountSeatService
   ) {}
 
   ngOnInit() {
+    this.GetGlobalStates();
+    this.GetAccounts();
+    this.GetTypesAccounts();
+    this.GetTypesAccountsSeat();
     this.CreateForm();
-    this.GetAllClients();
+  }
+  public CreateForm() {
+    this.formCreateAccount = this.formBuilder.group({
+      id_account: [
+        { value: null, disabled: false },
+        [Validators.required, Validators.pattern("^[0-9]*$")],
+      ],
+      id_type_account: [
+        { value: null, disabled: false },
+        [Validators.required],
+      ],
+      name_account: [{ value: null, disabled: false }, [Validators.required]],
+      id_type_account_seat: [{ value: null, disabled: false }],
+    });
+    this.formFilterData = this.formBuilder.group({
+      id_account: [{ value: null, disabled: false }],
+      id_type_account: [{ value: null, disabled: false }],
+      name_account: [{ value: null, disabled: false }],
+    });
+    this.formFilterData.controls.id_account.valueChanges.subscribe(
+      (nameFilterValue) => {
+        this.filteredValues.id_account = nameFilterValue;
+        this.dataSource.filter = JSON.stringify(this.filteredValues);
+      }
+    );
+    this.formFilterData.controls.id_type_account.valueChanges.subscribe(
+      (positionFilterValue) => {
+        this.filteredValues.id_type_account = positionFilterValue;
+        this.dataSource.filter = JSON.stringify(this.filteredValues);
+      }
+    );
+    this.formFilterData.controls.name_account.valueChanges.subscribe(
+      (newfilter) => {
+        this.filteredValues.name_account = newfilter;
+        this.dataSource.filter = JSON.stringify(this.filteredValues);
+      }
+    );
+
+    this.dataSource.filterPredicate = this.customFilterPredicate();
+  }
+
+  public customFilterPredicate() {
+    const myFilterPredicate = (
+      data: filterTableAccounts,
+      filter: string
+    ): boolean => {
+      let searchString: any = JSON.parse(filter);
+      let filterState: any;
+      filterState =
+        data.id_account
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.id_account.trim().toLowerCase()) !== -1 &&
+        data.id_type_account
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.id_type_account.trim().toLowerCase()) !== -1 &&
+        data.name_account
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.name_account.trim().toLowerCase()) !== -1;
+
+      return filterState;
+    };
+
+    return myFilterPredicate;
   }
 
   public openSnackBar(message: string, action: string) {
@@ -41,119 +143,145 @@ export class DashboardComponent implements OnInit {
       duration: 5000,
     });
   }
-  public CreateForm() {
-    this.formCreateClient = this.formBuilder.group({
-      number_id: [
-        { value: null, disabled: false },
-        [Validators.required, this.father.ValidIDFormControl],
-      ],
-      name: [{ value: null, disabled: false }, [Validators.required]],
-      birthday: [{ value: null, disabled: false }, [Validators.required]],
-      email: [
-        { value: null, disabled: false },
-        [Validators.required, Validators.email],
-      ],
-      phone: [{ value: null, disabled: false }, [Validators.required]],
-      address: [{ value: null, disabled: false }, [Validators.required]],
-    });
+  public cleanForm(form: FormGroup) {
+    form.reset();
   }
 
-  public GetAllClients() {
-    this.clientService.getClients().subscribe((data) => {
-      this.clients = data.data;
-    });
-  }
-
-  public CreateClient() {
-    if (this.formCreateClient.valid) {
-      //Levantar modal
-      const dialogRef = this.dialog.open(ModalCreateUserComponent, {
-        disableClose: true,
-        maxWidth: "600px",
-        data: this.formCreateClient.value,
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.ConfirmCreateClient();
-        }
-      });
+  public keyPressNumbers(event) {
+    var charCode = event.which ? event.which : event.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
     } else {
-      this.formCreateClient.markAllAsTouched();
+      return true;
     }
   }
 
-  public ConfirmCreateClient() {
-    this.clientService
-      .createClient(this.formCreateClient.value)
+  public GetAccounts() {
+    this.accountingService.getAllAcount().subscribe((data: AccountModel[]) => {
+      data = data.filter((element) => {
+        return element.id_state_global === this.statesGlobal[0].id_state_global;
+      });
+      this.dataSource.data = data;
+    });
+  }
+  public GetGlobalStates() {
+    this.stateGlobalService
+      .getAllStatesGlobal()
+      .subscribe((data: StatesGlobalModel[]) => {
+        this.statesGlobal = data;
+      });
+  }
+  public GetTypesAccounts() {
+    this.typeAccountService
+      .getAllTypeAcount()
+      .subscribe((data: TypeAccountModel[]) => {
+        this.typesAccount = data;
+      });
+  }
+
+  public GetTypesAccountsSeat() {
+    this.typeAccountSeatService
+      .getAllTypeAcountSeat()
+      .subscribe((data: any[]) => {
+        this.typesAccountSeat = data;
+      });
+  }
+  public CreateAccount() {
+    if (this.formCreateAccount.valid) {
+      this.formCreateAccount.controls.id_type_account_seat.value === ""
+        ? this.formCreateAccount.controls.id_type_account_seat.setValue(null)
+        : "";
+
+      this.ConfirmCreateAccount(this.formCreateAccount);
+    } else {
+      this.formCreateAccount.markAllAsTouched();
+    }
+  }
+
+  public ConfirmCreateAccount(formCreate: FormGroup) {
+    this.accountingService.createAccount(formCreate.value).subscribe((data) => {
+      if (data.transaccion) {
+        this.openSnackBar(data.mensaje, "Continuar");
+        this.GetAccounts();
+      } else {
+        const dialogRefModalEdit = this.dialog.open(
+          ModalReactiveAccountComponent,
+          {
+            disableClose: true,
+            maxWidth: "600px",
+            autoFocus: false,
+            maxHeight: "90vh",
+            data: { message: data.mensaje },
+          }
+        );
+        dialogRefModalEdit.afterClosed().subscribe((result) => {
+          if (result) {
+            this.accountingService
+              .reactiveAccount(formCreate.value)
+              .subscribe((data) => {
+                if (data.transaccion) {
+                  this.openSnackBar(data.mensaje, "Continuar");
+                  this.GetAccounts();
+                }
+              });
+          }
+        });
+      }
+    });
+  }
+
+  public DeleteAccount(item: AccountModel) {
+    const dialogRefModalEdit = this.dialog.open(
+      ModalConfirmDeletePlanComponent,
+      {
+        disableClose: true,
+        maxWidth: "600px",
+        autoFocus: false,
+        maxHeight: "90vh",
+        data: item,
+      }
+    );
+    dialogRefModalEdit.afterClosed().subscribe((result) => {
+      result._id_account ? this.ConfirmDeleteAccount(result._id_account) : null;
+    });
+  }
+
+  public ConfirmDeleteAccount(accountDelete: AccountModel) {
+    this.accountingService
+      .deleteAccount({ _id_account: accountDelete })
       .subscribe((data) => {
         if (data) {
           this.openSnackBar(data.mensaje, "Continuar");
         }
         if (data.transaccion) {
-          this.GetAllClients();
+          this.GetAccounts();
         }
       });
   }
 
-  public EditClient(item: ClientsModel) {
-    // llamar a un modal , enviar item y si confirma actualizar y obtener los resultados
-
-    //Levantar modal
-    const dialogRef1 = this.dialog.open(ModalEditUserComponent, {
+  public EditAccount(item: any) {
+    const dialogRefModalEdit = this.dialog.open(ModalEditPlanComponent, {
       disableClose: true,
       maxWidth: "600px",
       autoFocus: false,
       maxHeight: "90vh",
       data: item,
     });
-
-    dialogRef1.afterClosed().subscribe((result) => {
-      if (result !== false) {
-        // realizo la actualización con nuevo objeto
-        const dialogRef2 = this.dialog.open(ModalConfirmEditUserComponent, {
-          disableClose: true,
-          maxWidth: "600px",
-          autoFocus: false,
-          maxHeight: "90vh",
-          data: result,
-        });
-        dialogRef2.afterClosed().subscribe((response) => {
-          if (response) {
-            this.ConfirmEditClient(result);
-          }
-        });
+    dialogRefModalEdit.afterClosed().subscribe((result) => {
+      if (result) {
+        this.ConfirmEditAccount(result);
       }
     });
   }
 
-  public ConfirmEditClient(clientUpdate: ClientsModel) {
-    this.clientService.updateClient(clientUpdate).subscribe((data) => {
+  public ConfirmEditAccount(accountUpdate: any) {
+    this.accountingService.updateAccount(accountUpdate).subscribe((data) => {
       if (data) {
         this.openSnackBar(data.mensaje, "Continuar");
       }
       if (data.transaccion) {
-        this.GetAllClients();
-      }
-    });
-  }
-
-  public DeleteClient(item: ClientsModel) {
-    const dialogRef3 = this.dialog.open(ModalDeleteUserComponent, {
-      disableClose: true,
-      maxWidth: "600px",
-      data: item,
-    });
-    dialogRef3.afterClosed().subscribe((result) => {
-      if (result) {
-        this.clientService.deleteClient(item).subscribe((data) => {
-          if (data) {
-            this.openSnackBar(data.mensaje, "Continuar");
-          }
-          if (data.transaccion) {
-            this.GetAllClients();
-          }
-        });
+        this.GetAccounts();
       }
     });
   }

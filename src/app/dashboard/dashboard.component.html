@@ -2,298 +2,427 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <mat-tab-group mat-align-tabs="center">
-          <mat-tab label="Listado de Clientes">
-            <div class="card">
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-hover" style="cursor: pointer">
-                    <thead class="text-center text-primary">
-                      <th scope="col" class="text-dark">Cédula</th>
-                      <th scope="col" class="text-dark">Nombre</th>
-                      <th scope="col" class="text-dark">Fecha de Nacimiento</th>
-                      <th scope="col" class="text-dark">Correo Electrónico</th>
-                      <th scope="col" class="text-dark">Número Celular</th>
-                      <th scope="col" class="text-dark">Dirección</th>
-                      <th scope="col" class="text-dark">Editar</th>
-                      <th scope="col" class="text-dark">Eliminar</th>
-                    </thead>
-                    <tbody>
-                      <tr
-                        class="text-center"
-                        *ngFor="let item of clients"
-                        [class.active]="item == selectedClient"
+        <mat-tab-group class="pt-4 bg-white" [(selectedIndex)]="selectedTab">
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span
+                #tooltip="matTooltip"
+                matTooltip="Listado de Cuentas"
+                color="primary"
+              >
+                <i class="material-icons color-toooltip-text"
+                  >library_books</i
+                ></span
+              >
+            </ng-template>
+            <div>
+              <div class="card-body overflow-hidden">
+                <div class="row justify-content-center">
+                  <div class="col col-12 col-sm-4 col-md-4 text-center">
+                    <mat-form-field
+                      [formGroup]="formFilterData"
+                      class="mx-auto"
+                      appearance="outline"
+                    >
+                      <mat-label class="pl-3">Buscar por código</mat-label>
+                      <span matPrefix>
+                        <i class="material-icons">search</i></span
                       >
-                        <td>{{ item.number_id }}</td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.birthday }}</td>
-                        <td>{{ item.email }}</td>
-                        <td>{{ item.phone }}</td>
-                        <td>{{ item.address }}</td>
-                        <td>
-                          <i (click)="EditClient(item)" class="material-icons"
-                            >edit</i
-                          >
-                        </td>
-                        <td>
-                          <i
-                            (click)="DeleteClient(item)"
-                            class="material-icons"
-                            style="color: rgb(236, 72, 72)"
-                            >delete</i
-                          >
-                        </td>
-                      </tr>
-                    </tbody>
+                      <input
+                        matInput
+                        (keypress)="keyPressNumbers($event)"
+                        autocomplete="off"
+                        formControlName="id_account"
+                        type="text"
+                        class="pl-3 font-weight-bold text-size-18px text-center"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="col col-12 col-sm-4 col-md-4 text-center">
+                    <mat-form-field
+                      class="mx-auto"
+                      appearance="outline"
+                      [formGroup]="formFilterData"
+                    >
+                      <mat-label class="pl-3">Buscar por tipo</mat-label>
+                      <span matPrefix>
+                        <i class="material-icons">search</i></span
+                      >
+                      <mat-select
+                        formControlName="id_type_account"
+                        class="cursor-pointer text-center text-size-18px"
+                      >
+                        <mat-option value="" class="text-center">
+                          <strong>-- Todos los tipos --</strong></mat-option
+                        >
+                        <mat-option
+                          class="text-center"
+                          *ngFor="let item of typesAccount"
+                          value="{{ item.id_type_account }}"
+                          >{{ item.desc_type_account }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col col-12 col-sm-4 col-md-4 text-center">
+                    <mat-form-field
+                      class="mx-auto"
+                      appearance="outline"
+                      [formGroup]="formFilterData"
+                    >
+                      <mat-label class="pl-3">Buscar por nombre</mat-label>
+                      <span matPrefix>
+                        <i class="material-icons">search</i></span
+                      >
+                      <input
+                        matInput
+                        autocomplete="off"
+                        formControlName="name_account"
+                        type="text"
+                        class="pl-3 font-weight-bold text-size-18px text-center"
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="mat-elevation-z2 overflow-auto max-height-300">
+                  <table
+                    mat-table
+                    table-hover
+                    [dataSource]="dataSource"
+                    class="w-100 min-width-600"
+                  >
+                    <ng-container matColumnDef="id_account">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong>CÓDIGO</strong>
+                      </th>
+                      <td
+                        class="text-size-18px text-center"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        {{ element.id_account }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type_account">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong>TIPO</strong>
+                      </th>
+                      <td
+                        class="text-size-18px text-center"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        {{
+                          element.desc_type_account.substring(
+                            0,
+                            numberStringStates
+                          )
+                        }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name_account">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong>NOMBRE</strong>
+                      </th>
+                      <td
+                        class="text-size-18px text-center"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        {{ element.name_account }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="desc_type_account_seat">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong>TIPO CONTABLE</strong>
+                      </th>
+                      <td
+                        class="text-size-18px text-center"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        {{
+                          element.desc_type_account_seat === null
+                            ? "-"
+                            : element.desc_type_account_seat
+                        }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="edit">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong>EDITAR</strong>
+                      </th>
+                      <td
+                        class="text-size-18px text-center"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        <i
+                          (click)="EditAccount(element)"
+                          class="material-icons cursor-pointer"
+                          >edit</i
+                        >
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="delete">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong>ELIMINAR</strong>
+                      </th>
+                      <td
+                        class="text-size-18px text-center"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        <i
+                          (click)="DeleteAccount(element)"
+                          class="material-icons text-danger cursor-pointer"
+                          >delete</i
+                        >
+                      </td>
+                    </ng-container>
+
+                    <tr
+                      mat-header-row
+                      *matHeaderRowDef="displayedColumns; sticky: true"
+                    ></tr>
+                    <tr
+                      mat-row
+                      [ngClass]="
+                        row.id_type_account === 1
+                          ? 'font-weight-bold'
+                          : 'font-weight-light'
+                      "
+                      *matRowDef="let row; columns: displayedColumns"
+                    ></tr>
+
+                    <tr class="mat-row text-center" *matNoDataRow>
+                      <td class="mat-cell" colspan="4">
+                        <span class="text-size-18px">
+                          No existen datos para <strong> </strong
+                        ></span>
+                      </td>
+                    </tr>
                   </table>
                 </div>
               </div>
-            </div></mat-tab
-          >
-          <mat-tab label="Añadir Cliente">
-            <div class="div card mt-3">
-              <div class="card-body">
-                <div class="form-group mt-4">
-                  <form [formGroup]="formCreateClient" class="w-100">
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span
+                #tooltip="matTooltip"
+                matTooltip="Agregar Cuenta "
+                color="primary"
+              >
+                <i class="material-icons color-toooltip-text"
+                  >library_add</i
+                ></span
+              >
+            </ng-template>
+            <div>
+              <div class="card-body pt-1">
+                <div class="form-group">
+                  <div class="row justify-content-center">
+                    <div class="col-12 text-center">
+                      <h3 class="text-dark">
+                        <span><strong>Nueva Cuenta</strong> </span>
+                      </h3>
+                    </div>
+                  </div>
+                  <form [formGroup]="formCreateAccount" class="w-100 mt-2">
                     <div class="row justify-content-center">
-                      <div class="col-12 col-lg-4 col-md-6">
-                        <mat-form-field
-                          style="cursor: pointer"
-                          appearance="outline"
-                          class="w-100"
-                        >
-                          <mat-label style="color: #7e7d7d"
-                            >Número de Cédula</mat-label
-                          >
+                      <div class="col-12 col-lg-8 max-width-input-forms-add">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <mat-label class="text-muted">CÓDIGO</mat-label>
 
                           <input
-                            style="
-                              cursor: pointer;
-                              text-align: center;
-                              font-size: 18px;
-                            "
                             matInput
+                            (keypress)="keyPressNumbers($event)"
                             type="tel"
-                            formControlName="number_id"
+                            formControlName="id_account"
                             autocomplete="off"
+                            class="text-center text-size-18px"
                           />
-                          <mat-hint
-                            style="color: #000000; width: 100%"
-                          ></mat-hint>
+                          <mat-hint class="w-100 text-dark"></mat-hint>
                           <mat-error
-                            style="color: red"
+                            class="text-danger"
                             *ngIf="
                               this.father.GroupFormGeneralisControlHasError(
-                                this.formCreateClient,
-                                'number_id',
+                                this.formCreateAccount,
+                                'id_account',
                                 this.formCreateClientErrors
                               )
                             "
                             >{{
-                              this.formCreateClientErrors.number_id
+                              this.formCreateClientErrors.id_account
                             }}</mat-error
-                          >
-                        </mat-form-field>
-                      </div>
-                      <div class="col-12 col-lg-4 col-md-6">
-                        <mat-form-field
-                          style="cursor: pointer"
-                          appearance="outline"
-                          class="w-100"
-                        >
-                          <mat-label style="color: #7e7d7d">Nombre</mat-label>
-
-                          <input
-                            style="
-                              cursor: pointer;
-                              text-align: center;
-                              font-size: 18px;
-                            "
-                            matInput
-                            type="text"
-                            formControlName="name"
-                            autocomplete="off"
-                          />
-                          <mat-hint style="color: #000000; width: 100%">
-                          </mat-hint>
-                          <mat-error
-                            style="color: red"
-                            *ngIf="
-                              this.father.GroupFormGeneralisControlHasError(
-                                this.formCreateClient,
-                                'name',
-                                this.formCreateClientErrors
-                              )
-                            "
-                            >{{ this.formCreateClientErrors.name }}</mat-error
                           >
                         </mat-form-field>
                       </div>
                     </div>
                     <div class="row justify-content-center">
-                      <div class="col-12 col-lg-4 col-md-6">
+                      <div class="col-12 col-lg-8 max-width-input-forms-add">
                         <mat-form-field
-                          style="cursor: pointer"
                           appearance="outline"
-                          class="w-100"
+                          class="w-100 cursor-pointer"
                         >
-                          <mat-label style="color: #7e7d7d"
-                            >Fecha de Nacimiento</mat-label
+                          <mat-label class="text-muted">TIPO</mat-label>
+
+                          <mat-select
+                            #matRef
+                            formControlName="id_type_account"
+                            class="cursor-pointer text-center text-size-18px"
                           >
-
-                          <input
-                            style="
-                              cursor: pointer;
-                              text-align: center;
-                              font-size: 18px;
-                              color: #000000;
-                            "
-                            readonly
-                            matInput
-                            (click)="picker.open()"
-                            (focus)="picker.open()"
-                            [matDatepicker]="picker"
-                            formControlName="birthday"
-                            autocomplete="off"
-                          />
-                          <mat-datepicker-toggle
-                            matSuffix
-                            [for]="picker"
-                          ></mat-datepicker-toggle>
-                          <mat-datepicker
-                            #picker
-                            disabled="false"
-                          ></mat-datepicker>
-
-                          <mat-hint
-                            style="color: #000000; width: 100%"
-                          ></mat-hint>
-
+                            <mat-option value="" class="text-center">
+                              <strong
+                                >-- Selecione Tipo de Cuenta --</strong
+                              ></mat-option
+                            >
+                            <mat-option
+                              class="text-center"
+                              *ngFor="let item of typesAccount"
+                              value="{{ item.id_type_account }}"
+                              >{{ item.desc_type_account }}</mat-option
+                            >
+                          </mat-select>
+                          <mat-hint class="w-100 text-dark"> </mat-hint>
                           <mat-error
-                            style="color: red"
+                            class="text-danger"
                             *ngIf="
                               this.father.GroupFormGeneralisControlHasError(
-                                this.formCreateClient,
-                                'birthday',
+                                this.formCreateAccount,
+                                'id_type_account',
                                 this.formCreateClientErrors
                               )
                             "
                             >{{
-                              this.formCreateClientErrors.birthday
+                              this.formCreateClientErrors.id_type_account
                             }}</mat-error
-                          >
-                        </mat-form-field>
-                      </div>
-                      <div class="col-12 col-lg-4 col-md-6">
-                        <mat-form-field
-                          style="cursor: pointer"
-                          appearance="outline"
-                          class="w-100"
-                        >
-                          <mat-label style="color: #7e7d7d"
-                            >Correo Electrónico</mat-label
-                          >
-
-                          <input
-                            style="
-                              cursor: pointer;
-                              text-align: center;
-                              font-size: 18px;
-                            "
-                            matInput
-                            type="text"
-                            formControlName="email"
-                            autocomplete="off"
-                          />
-                          <mat-hint
-                            style="color: #000000; width: 100%"
-                          ></mat-hint>
-                          <mat-error
-                            style="color: red"
-                            *ngIf="
-                              this.father.GroupFormGeneralisControlHasError(
-                                this.formCreateClient,
-                                'email',
-                                this.formCreateClientErrors
-                              )
-                            "
-                            >{{ this.formCreateClientErrors.email }}</mat-error
                           >
                         </mat-form-field>
                       </div>
                     </div>
                     <div class="row justify-content-center">
-                      <div class="col-12 col-lg-4 col-md-6">
+                      <div class="col-12 col-lg-8 max-width-input-forms-add">
                         <mat-form-field
-                          style="cursor: pointer"
                           appearance="outline"
-                          class="w-100"
+                          class="w-100 cursor-pointer"
                         >
-                          <mat-label style="color: #7e7d7d"
-                            >Número de Celular</mat-label
+                          <mat-label class="text-muted"
+                            >TIPO CONTABLE</mat-label
                           >
 
-                          <input
-                            style="
-                              cursor: pointer;
-                              text-align: center;
-                              font-size: 18px;
-                            "
-                            matInput
-                            type="tel"
-                            formControlName="phone"
-                            autocomplete="off"
-                          />
-                          <mat-hint style="color: #000000; width: 100%">
-                          </mat-hint>
+                          <mat-select
+                            #matRef
+                            formControlName="id_type_account_seat"
+                            class="cursor-pointer text-center text-size-18px"
+                          >
+                            <mat-option value="" class="text-center">
+                              <strong
+                                >-- Selecione Tipo Cuenta Contable --</strong
+                              ></mat-option
+                            >
+                            <mat-option
+                              class="text-center"
+                              *ngFor="let item of typesAccountSeat"
+                              value="{{ item.id_type_account_seat }}"
+                              >{{ item.desc_type_account_seat }}</mat-option
+                            >
+                          </mat-select>
+                          <mat-hint class="w-100 text-dark"> </mat-hint>
                           <mat-error
-                            style="color: red"
+                            class="text-danger"
                             *ngIf="
                               this.father.GroupFormGeneralisControlHasError(
-                                this.formCreateClient,
-                                'phone',
-                                this.formCreateClientErrors
-                              )
-                            "
-                            >{{ this.formCreateClientErrors.phone }}</mat-error
-                          >
-                        </mat-form-field>
-                      </div>
-                      <div class="col-12 col-lg-4 col-md-6">
-                        <mat-form-field
-                          style="cursor: pointer"
-                          appearance="outline"
-                          class="w-100"
-                        >
-                          <mat-label style="color: #7e7d7d"
-                            >Dirección</mat-label
-                          >
-
-                          <input
-                            style="
-                              cursor: pointer;
-                              text-align: center;
-                              font-size: 18px;
-                            "
-                            matInput
-                            type="text"
-                            formControlName="address"
-                            autocomplete="off"
-                          />
-                          <mat-hint
-                            style="color: #000000; width: 100%"
-                          ></mat-hint>
-                          <mat-error
-                            style="color: red"
-                            *ngIf="
-                              this.father.GroupFormGeneralisControlHasError(
-                                this.formCreateClient,
-                                'address',
+                                this.formCreateAccount,
+                                'id_type_account_seat',
                                 this.formCreateClientErrors
                               )
                             "
                             >{{
-                              this.formCreateClientErrors.address
+                              this.formCreateClientErrors.id_type_account_seat
+                            }}</mat-error
+                          >
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row justify-content-center">
+                      <div class="col-12 col-lg-8 max-width-input-forms-add">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <mat-label class="text-muted">NOMBRE</mat-label>
+
+                          <input
+                            class="text-center text-size-18px"
+                            matInput
+                            type="text"
+                            formControlName="name_account"
+                            autocomplete="off"
+                          />
+                          <mat-hint class="text-dark w-100"> </mat-hint>
+                          <mat-error
+                            class="text-danger"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formCreateAccount,
+                                'name_account',
+                                this.formCreateClientErrors
+                              )
+                            "
+                            >{{
+                              this.formCreateClientErrors.name_account
                             }}</mat-error
                           >
                         </mat-form-field>
@@ -302,19 +431,31 @@
                   </form>
 
                   <div class="row justify-content-center">
-                    <div class="col-12 col-lg-4 col-md-6">
-                      <button type="button" class="btn btn-danger w-100">
-                        Limpiar
-                      </button>
+                    <div
+                      class="
+                        col-12 col-lg-4
+                        max-width-buttons-forms-add
+                        text-right
+                      "
+                    >
+                      <span #tooltip="matTooltip" matTooltip="Limpiar "
+                        ><img
+                          class="cursor-pointer"
+                          (click)="cleanForm(formCreateAccount)"
+                          src="../../assets/img/clean.png"
+                          width="50px"
+                          alt=""
+                      /></span>
                     </div>
-                    <div class="col-12 col-lg-4 col-md-6">
-                      <button
-                        (click)="CreateClient()"
-                        type="button"
-                        class="btn btn-success w-100"
-                      >
-                        Guardar
-                      </button>
+                    <div class="col-12 col-lg-4 max-width-buttons-forms-add">
+                      <span #tooltip="matTooltip" matTooltip="Guardar"
+                        ><img
+                          class="cursor-pointer"
+                          (click)="CreateAccount()"
+                          src="../../assets/img/diskette.png"
+                          width="50px"
+                          alt=""
+                      /></span>
                     </div>
                   </div>
                 </div>

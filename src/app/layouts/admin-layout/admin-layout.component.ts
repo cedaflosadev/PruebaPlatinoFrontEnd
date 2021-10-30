@@ -11,7 +11,7 @@ import { Router, NavigationEnd, NavigationStart } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import PerfectScrollbar from "perfect-scrollbar";
 import * as $ from "jquery";
-import { AbstractControl, FormGroup } from "@angular/forms";
+import { AbstractControl, FormGroup, ValidatorFn } from "@angular/forms";
 
 @Component({
   selector: "app-admin-layout",
@@ -235,9 +235,15 @@ export class AdminLayoutComponent implements OnInit {
   public GroupFormGeneralisControlHasError(
     formGeneral: FormGroup,
     controlName: string,
-    errorsArrayGeneral: any
+    errorsArrayGeneral: any,
+    arrayForm?: boolean,
+    nameArray?: string,
+    index?: number
   ): boolean {
-    const control = formGeneral.controls[controlName];
+    const control = arrayForm
+      ? formGeneral.get(nameArray)["controls"][index]["controls"][controlName]
+      : formGeneral.controls[controlName];
+
     if (!control) {
       return false;
     }
@@ -252,8 +258,12 @@ export class AdminLayoutComponent implements OnInit {
         ? "* Campo es requerido"
         : control.errors.ValidIDFormControl
         ? "* Cédula no válida"
+        : control.errors.ValidNameAccount
+        ? "* Cuenta es obligatoria"
         : control.errors.email
         ? "* Correo no válido"
+        : control.errors.pattern
+        ? "* Formato no permitido"
         : null;
 
       errorsArrayGeneral[controlName] = messageError;

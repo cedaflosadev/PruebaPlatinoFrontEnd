@@ -23,6 +23,22 @@ import { MatTableModule } from "@angular/material/table";
 import { MatCardModule } from "@angular/material/card";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
+
+export const customCurrencyMaskConfig = {
+  align: "right",
+  allowNegative: false,
+  allowZero: false,
+  decimal: ".",
+  precision: 2,
+  prefix: "$ ",
+  suffix: "",
+  thousands: ",",
+  nullable: false,
+  min: null,
+  max: null,
+  inputMode: CurrencyMaskInputMode.FINANCIAL,
+};
 
 @NgModule({
   imports: [
@@ -44,6 +60,8 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
     MatCardModule,
     MatSnackBarModule,
     MatAutocompleteModule,
+
+    NgxCurrencyModule.forRoot(customCurrencyMaskConfig),
   ],
   declarations: [
     DashboardComponent,

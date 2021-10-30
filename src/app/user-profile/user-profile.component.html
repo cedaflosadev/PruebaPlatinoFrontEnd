@@ -2,301 +2,694 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <mat-tab-group mat-align-tabs="center">
-          <mat-tab label="Citas Agendadas">
-            <div class="card">
-              <div class="card-body">
-                <mat-form-field class="w-50" appearance="outline">
-                  <mat-label>Buscar por cédula, citas del cliente</mat-label>
+        <mat-tab-group class="pt-4 bg-white">
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span
+                #tooltip="matTooltip"
+                matTooltip="Listado de Movimientos"
+                color="primary"
+              >
+                <i class="material-icons color-toooltip-text"
+                  >library_books</i
+                ></span
+              >
+            </ng-template>
+            <div>
+              <div class="card-body overflow-hidden">
+                <mat-form-field
+                  class="max-width-search-input"
+                  appearance="outline"
+                >
+                  <mat-label></mat-label>
+                  <span matPrefix> <i class="material-icons">search</i></span>
                   <input
                     matInput
                     autocomplete="off"
-                    (keyup)="applyFilter($event)"
                     #input
                     type="text"
-                    style="cursor: pointer; font-size: 18px"
+                    class="pl-3 font-weight-bold text-size-18px"
                   />
                 </mat-form-field>
-
-                <table
-                  mat-table
-                  table-hover
-                  style="cursor: pointer"
-                  [dataSource]="dataSource"
-                  class="mat-elevation-z2 w-100 text-center"
+                <div
+                  class="
+                    mat-elevation-z2
+                    cursor-pointer
+                    overflow-auto
+                    max-height-300
+                  "
                 >
-                  <!-- Position Column -->
-                  <ng-container matColumnDef="_id">
-                    <th
-                      mat-header-cell
-                      *matHeaderCellDef
-                      style="text-align: center; font-size: 15px"
-                    >
-                      <strong>Código</strong>
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                      {{ element._id }}
-                    </td>
-                  </ng-container>
-
-                  <!-- Name Column -->
-                  <ng-container matColumnDef="date_quote">
-                    <th
-                      mat-header-cell
-                      *matHeaderCellDef
-                      style="text-align: center; font-size: 15px"
-                    >
-                      <strong>Fecha</strong>
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                      {{ element.date_quote }}
-                    </td>
-                  </ng-container>
-
-                  <!-- Weight Column -->
-                  <ng-container matColumnDef="hour_quote">
-                    <th
-                      mat-header-cell
-                      *matHeaderCellDef
-                      style="text-align: center; font-size: 15px"
-                    >
-                      <strong>Hora</strong>
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                      {{ element.hour_quote }}
-                    </td>
-                  </ng-container>
-
-                  <!-- Symbol Column -->
-                  <ng-container matColumnDef="state">
-                    <th
-                      mat-header-cell
-                      *matHeaderCellDef
-                      style="text-align: center; font-size: 15px"
-                    >
-                      <strong>Estado</strong>
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                      {{ element.state }}
-                    </td>
-                  </ng-container>
-
-                  <!-- Symbol Column -->
-                  <ng-container matColumnDef="id_client">
-                    <th
-                      mat-header-cell
-                      *matHeaderCellDef
-                      style="text-align: center; font-size: 15px"
-                    >
-                      <strong>Cédula</strong>
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                      {{ element.id_client }}
-                    </td>
-                  </ng-container>
-
-                  <!-- Symbol Column -->
-                  <ng-container matColumnDef="edit">
-                    <th
-                      mat-header-cell
-                      *matHeaderCellDef
-                      style="text-align: center; font-size: 15px"
-                    >
-                      <strong>Editar</strong>
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                      <button
-                        mat-icon-button
-                        [hidden]="element.state === 'A'"
-                        color="primary"
+                  <table
+                    mat-table
+                    table-hover
+                    [dataSource]="dataSource"
+                    class="w-100 min-width-600"
+                  >
+                    <ng-container matColumnDef="id_account">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="text-size-18px font-weight-bold text-dark"
                       >
-                        <i (click)="EditQuotes(element)" class="material-icons"
+                        <strong>CÓDIGO</strong>
+                      </th>
+                      <td
+                        class="text-size-18px"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        {{ element.id_account }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type_account">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="text-size-18px font-weight-bold text-dark"
+                      >
+                        <strong>TIPO</strong>
+                      </th>
+                      <td
+                        class="text-size-18px"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        {{ element.id_type_account === 1 ? "M" : "A" }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name_account">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="text-size-18px font-weight-bold text-dark"
+                      >
+                        <strong>NOMBRE</strong>
+                      </th>
+                      <td
+                        class="text-size-18px"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        {{ element.name_account }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="edit">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="text-size-18px font-weight-bold text-dark"
+                      >
+                        <strong>EDITAR</strong>
+                      </th>
+                      <td
+                        class="text-size-18px"
+                        mat-cell
+                        *matCellDef="let element"
+                      >
+                        <i (click)="EditAccount(element)" class="material-icons"
                           >edit</i
                         >
-                      </button>
-                    </td>
-                  </ng-container>
-
-                  <!-- Symbol Column -->
-                  <ng-container matColumnDef="atent">
-                    <th
-                      mat-header-cell
-                      *matHeaderCellDef
-                      style="text-align: center; font-size: 15px"
-                    >
-                      <strong>Atender</strong>
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                      <button
-                        mat-icon-button
-                        [hidden]="element.state === 'A'"
-                        color="primary"
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="delete">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="text-size-18px font-weight-bold text-dark"
+                      >
+                        <strong>ELIMINAR</strong>
+                      </th>
+                      <td
+                        class="text-size-18px"
+                        mat-cell
+                        *matCellDef="let element"
                       >
                         <i
-                          (click)="CreateAttention(element)"
-                          class="material-icons"
-                          >check_circle</i
-                        >
-                      </button>
-                    </td>
-                  </ng-container>
-
-                  <!-- Symbol Column -->
-                  <ng-container matColumnDef="delete">
-                    <th
-                      mat-header-cell
-                      *matHeaderCellDef
-                      style="text-align: center; font-size: 15px"
-                    >
-                      <strong>Eliminar</strong>
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                      <button
-                        mat-icon-button
-                        [hidden]="element.state === 'A'"
-                        color="primary"
-                      >
-                        <i
-                          style="color: #ff5555"
-                          (click)="DeleteQuotes(element)"
-                          class="material-icons"
+                          (click)="DeleteAccount(element)"
+                          class="material-icons text-danger"
                           >delete</i
                         >
-                      </button>
-                    </td>
-                  </ng-container>
+                      </td>
+                    </ng-container>
 
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr
-                    mat-row
-                    *matRowDef="let row; columns: displayedColumns"
-                  ></tr>
-
-                  <!-- Row shown when there is no matching data. -->
-                  <tr class="mat-row" *matNoDataRow>
-                    <td class="mat-cell" colspan="4">
-                      No data matching the filter "{{ input.value }}"
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div></mat-tab
-          >
-          <mat-tab label="Agendar Cita"
-            ><div class="card">
-              <div class="card-body">
-                <p>Seleccionar Cliente</p>
-                <form [formGroup]="formScheduleQuote" class="w-100">
-                  <mat-form-field appearance="outline">
-                    <mat-label style="color: #000000"
-                      >Seleccione un cliente</mat-label
-                    >
-
-                    <input
-                      formControlName="id_client"
-                      matInput
-                      type="text"
-                      [matAutocomplete]="auto"
-                    />
-                    <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option
-                        *ngFor="let item of filteredOptions"
-                        [value]="item.number_id"
-                      >
-                        {{ item.number_id }} - {{ item.name }}
-                      </mat-option>
-                    </mat-autocomplete>
-                    <mat-hint style="color: #000000; width: 100%"></mat-hint>
-                    <mat-error
-                      style="color: red"
-                      *ngIf="
-                        this.father.GroupFormGeneralisControlHasError(
-                          this.formScheduleQuote,
-                          'id_client',
-                          this.formScheduleQuoteErrors
-                        )
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr
+                      mat-row
+                      [ngClass]="
+                        row.id_type_account === 1
+                          ? 'font-weight-bold'
+                          : 'font-weight-light'
                       "
-                      >{{ this.formScheduleQuoteErrors.id_client }}</mat-error
-                    >
-                  </mat-form-field>
-                </form>
-                <br />
-                <div
-                  *ngIf="selectedDate === null || selectedHour === null"
-                  class="alert alert-danger"
-                  role="alert"
-                >
-                  * Obligatorio Seleccionar Hora y fecha de la cita
-                </div>
-                <br />
-                <div class="row justify-content-center">
-                  <div class="col-12 col-lg-5 col-md-5 text-center">
-                    <mat-card
-                      style="max-width: 350px"
-                      class="demo-inline-calendar-card mx-auto"
-                    >
-                      <mat-calendar
-                        [selected]="selectedDate"
-                        [minDate]="dateNow"
-                        (selectedChange)="SelectedDate($event)"
-                      >
-                      </mat-calendar>
-                    </mat-card>
-                    <br />
-                    <span class="mt-3" style="font-size: 20px"
-                      ><strong
-                        >Fecha seleccionada: {{ selectedDate }}
-                      </strong></span
-                    >
-                  </div>
-                  <div class="col-12 col-lg-6 col-md-6 mt-4">
-                    <div
-                      class="
-                        row
-                        justify-content-center
-                        justify-content-lg-start
-                        justify-content-md-start
-                      "
-                    >
-                      <div
-                        *ngFor="let item of hourAvaibles"
-                        class="col-3 col-2-lg text-center"
-                        style="
-                          background: #5c95ff;
-                          color: #ffffff;
-                          margin: 1px;
-                          cursor: pointer;
-                          max-width: 100px;
-                        "
-                        (click)="SelectHour($event.target.innerText)"
-                      >
-                        {{ item }}
-                      </div>
-                    </div>
-                    <br />
-                    <span class="mt-3" style="font-size: 20px"
-                      ><strong
-                        >Hora seleccionada: {{ selectedHour }}
-                      </strong></span
-                    >
-                  </div>
-                </div>
+                      *matRowDef="let row; columns: displayedColumns"
+                    ></tr>
 
-                <div class="row justify-content-center mt-4">
-                  <div class="col-12 col-lg-4 col-md-6">
-                    <button
-                      (click)="CreateQuotes()"
-                      type="button"
-                      class="btn btn-success w-100"
-                    >
-                      Guardar
-                    </button>
-                  </div>
+                    <tr class="mat-row text-center" *matNoDataRow>
+                      <td class="mat-cell" colspan="4">
+                        <span class="text-size-18px">
+                          No existen datos <strong> </strong
+                        ></span>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
           </mat-tab>
-        </mat-tab-group>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span
+                #tooltip="matTooltip"
+                matTooltip="Agregar Movimiento"
+                color="primary"
+              >
+                <i class="material-icons color-toooltip-text"
+                  >library_add</i
+                ></span
+              >
+            </ng-template>
+            <div class="card-body pt-0 pb-0">
+              <div class="form-group pb-0">
+                <div class="row justify-content-center">
+                  <div class="col-12 text-center">
+                    <h3 class="text-dark">
+                      <span><strong>Nuevo Movimiento</strong> </span>
+                    </h3>
+                  </div>
+                </div>
+                <form [formGroup]="formHeader" class="w-100 mt-2 mb-0">
+                  <div class="row justify-content-center">
+                    <div class="col-12 col-md-6 col-lg-2">
+                      <mat-form-field
+                        appearance="outline"
+                        class="w-100 cursor-pointer"
+                      >
+                        <mat-label class="text-muted">FECHA</mat-label>
+                        <input
+                          matInput
+                          [matDatepicker]="picker"
+                          (keypress)="keyPressNumbers($event)"
+                          formControlName="date_mov"
+                          autocomplete="off"
+                          type="tel"
+                          class="cursor-pointer text-center text-size-18px"
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="picker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+
+                        <mat-hint class="w-100 text-dark"></mat-hint>
+                        <mat-error
+                          class="text-danger"
+                          *ngIf="
+                            this.father.GroupFormGeneralisControlHasError(
+                              this.formHeader,
+                              'date_mov',
+                              this.formHeaderErrors
+                            )
+                          "
+                          >{{ this.formHeaderErrors.date_mov }}</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-2">
+                      <mat-form-field
+                        appearance="outline"
+                        class="w-100 cursor-pointer"
+                      >
+                        <mat-label class="text-muted">CÉDULA O RUC</mat-label>
+                        <input
+                          type="tel"
+                          aria-label="Number"
+                          matInput
+                          formControlName="id_number_mov"
+                          type="tel"
+                          (keyup)="pressFindVal($event.target.value)"
+                          (keypress)="keyPressNumbers($event)"
+                          class="cursor-pointer text-center text-size-18px"
+                          [matAutocomplete]="auto"
+                        />
+                        <mat-autocomplete
+                          #auto="matAutocomplete"
+                          (optionSelected)="getPosts($event.option.value)"
+                        >
+                          <mat-option
+                            *ngFor="let option of filteredOptions | async"
+                            [value]="option.id_number"
+                          >
+                            {{ option.id_number }} - {{ option.name }}
+                          </mat-option>
+                        </mat-autocomplete>
+
+                        <mat-hint class="w-100 text-dark"></mat-hint>
+                        <mat-error
+                          class="text-danger"
+                          *ngIf="
+                            this.father.GroupFormGeneralisControlHasError(
+                              this.formHeader,
+                              'id_number_mov',
+                              this.formHeaderErrors
+                            )
+                          "
+                          >{{ this.formHeaderErrors.id_number_mov }}</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6">
+                      <mat-form-field
+                        appearance="outline"
+                        class="w-100 cursor-pointer"
+                      >
+                        <mat-label class="text-muted"
+                          >NOMBRE PORTADOR</mat-label
+                        >
+
+                        <input
+                          matInput
+                          disabled
+                          readonly
+                          type="text"
+                          formControlName="name_por_mov"
+                          autocomplete="off"
+                          class="
+                            cursor-pointer
+                            text-center text-size-18px text-muted
+                          "
+                          (keypress)="keyPressNumbers($event)"
+                        />
+                        <mat-hint class="w-100 text-dark"></mat-hint>
+                        <mat-error
+                          class="text-danger"
+                          *ngIf="
+                            this.father.GroupFormGeneralisControlHasError(
+                              this.formHeader,
+                              'name_por_mov',
+                              this.formHeaderErrors
+                            )
+                          "
+                          >{{ this.formHeaderErrors.name_por_mov }}</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-2">
+                      <mat-form-field
+                        appearance="outline"
+                        class="w-100 cursor-pointer"
+                      >
+                        <mat-label class="text-muted">NÚMERO CHEQUE</mat-label>
+
+                        <input
+                          matInput
+                          (keypress)="keyPressNumbers($event)"
+                          type="tel"
+                          formControlName="check_mov"
+                          autocomplete="off"
+                          class="cursor-pointer text-center text-size-18px"
+                        />
+                        <mat-hint class="w-100 text-dark"></mat-hint>
+                        <mat-error
+                          class="text-danger"
+                          *ngIf="
+                            this.father.GroupFormGeneralisControlHasError(
+                              this.formHeader,
+                              'check_mov',
+                              this.formHeaderErrors
+                            )
+                          "
+                          >{{ this.formHeaderErrors.check_mov }}</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <form [formGroup]="formDetails">
+                <span #tooltip="matTooltip" matTooltip="Agregar "
+                  ><img
+                    class="cursor-pointer"
+                    (click)="addRow()"
+                    src="../../assets/img/add-file.png"
+                    width="50px"
+                    alt=""
+                /></span>
+                <span
+                  *ngIf="rowsDetails.length > 0"
+                  #tooltip="matTooltip"
+                  matTooltip="Guardar"
+                  ><img
+                    class="cursor-pointer ml-2"
+                    (click)="SaveMov()"
+                    src="../../assets/img/diskette.png"
+                    width="45px"
+                    alt=""
+                /></span>
+
+                <div
+                  *ngIf="errorToCreateSeat.state"
+                  class="alert alert-danger mt-3"
+                  role="alert"
+                >
+                  {{errorToCreateSeat.message}}
+                </div>
+                <div class="mat-elevation-z2 overflow-auto max-height-300 mt-3">
+                  <table
+                    class="w-100 min-width-600"
+                    mat-table
+                    [dataSource]="dataSourceDetails"
+                    formArrayName="dataDetails"
+                  >
+                    <!-- Row definitions -->
+                    <tr
+                      mat-header-row
+                      *matHeaderRowDef="displayColumnsDetails; sticky: true"
+                    ></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="
+                        let row;
+                        let i = index;
+                        columns: displayColumnsDetails
+                      "
+                    ></tr>
+
+                    <!-- Column definitions -->
+                    <ng-container matColumnDef="id_cta_mov">
+                      <th
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                        mat-header-cell
+                        *matHeaderCellDef
+                      >
+                        <strong> CÓDIGO</strong>
+                      </th>
+                      <td
+                        class="pl-2 pr-2"
+                        mat-cell
+                        *matCellDef="let row; let index = index"
+                        [formGroupName]="index"
+                      >
+                        <mat-form-field
+                          appearance="outline"
+                          class="w-100 cursor-pointer pt-3"
+                        >
+                          <input
+                            type="text"
+                            aria-label="Number"
+                            matInput
+                            formControlName="id_cta_mov"
+                            type="tel"
+                            (keyup)="pressFind($event.target.value, index)"
+                            (keypress)="keyPressNumbers($event)"
+                            class="cursor-pointer text-center text-size-18px"
+                            [matAutocomplete]="auto"
+                          />
+                          <mat-autocomplete
+                            #auto="matAutocomplete"
+                            (optionSelected)="
+                              getPostsNameAccount($event.option.value, index)
+                            "
+                          >
+                            <mat-option
+                              [disabled]="
+                                option.id_type_account === 1 ? 'true' : 'false'
+                              "
+                              *ngFor="
+                                let option of filteredOptionsAccount[index]
+                                  | async
+                              "
+                              [value]="option.id_account"
+                            >
+                              {{ option.id_account }} -
+                              {{ option.name_account }}
+                            </mat-option>
+                          </mat-autocomplete>
+
+                          <mat-hint class="w-100 text-dark"></mat-hint>
+                          <mat-error
+                            class="text-danger"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formDetails,
+                                'id_cta_mov',
+                                this.formDetailsErrors,
+                                true,
+                                'dataDetails',
+                                index
+                              )
+                            "
+                            >{{ this.formDetailsErrors.id_cta_mov }}</mat-error
+                          >
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="des_cta_mov">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong> CUENTA</strong>
+                      </th>
+                      <td
+                        class="pl-2 pr-2"
+                        mat-cell
+                        *matCellDef="let row; let index = index"
+                        [formGroupName]="index"
+                      >
+                        <mat-form-field
+                          appearance="outline"
+                          class="w-100 cursor-pointer pt-3"
+                        >
+                          <input
+                            matInput
+                            disabled
+                            readonly
+                            type="text"
+                            formControlName="des_cta_mov"
+                            autocomplete="off"
+                            class="
+                              cursor-pointer
+                              text-center text-size-18px text-muted
+                            "
+                          />
+                          <mat-hint class="w-100 text-dark"></mat-hint>
+
+                          <mat-error
+                            class="text-danger"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formDetails,
+                                'des_cta_mov',
+                                this.formDetailsErrors,
+                                true,
+                                'dataDetails',
+                                index
+                              )
+                            "
+                            >{{ this.formDetailsErrors.des_cta_mov }}</mat-error
+                          >
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="id_state_cta_mov">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong> TIPO</strong>
+                      </th>
+                      <td
+                        class="pl-2 pr-2"
+                        mat-cell
+                        *matCellDef="let row; let index = index"
+                        [formGroupName]="index"
+                      >
+                        <mat-form-field
+                          appearance="outline"
+                          class="w-100 cursor-pointer pt-3"
+                        >
+                          <mat-select
+                            #matRef
+                            formControlName="id_state_cta_mov"
+                            class="cursor-pointer text-center text-size-18px"
+                          >
+                            <mat-option
+                              class="text-center"
+                              *ngFor="let item of typeAccountsMov"
+                              value="{{ item.id_type_account_mov }}"
+                            >
+                              {{
+                                item.id_type_account_mov ===
+                                typeAccountsMov[0].id_type_account_mov
+                                  ? "+"
+                                  : "-"
+                              }}
+                            </mat-option>
+                          </mat-select>
+                          <mat-hint class="w-100 text-dark"></mat-hint>
+                          <mat-error
+                            class="text-danger"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formDetails,
+                                'id_state_cta_mov',
+                                this.formDetailsErrors,
+                                true,
+                                'dataDetails',
+                                index
+                              )
+                            "
+                            >{{
+                              this.formDetailsErrors.id_state_cta_mov
+                            }}</mat-error
+                          >
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="val_cta_mov">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong> VALOR</strong>
+                      </th>
+                      <td
+                        class="pl-2 pr-2"
+                        mat-cell
+                        *matCellDef="let row; let index = index"
+                        [formGroupName]="index"
+                      >
+                        <mat-form-field
+                          appearance="outline"
+                          class="w-100 cursor-pointer pt-3"
+                        >
+                          <input
+                            matInput
+                            currencyMask
+                            type="tel"
+                            formControlName="val_cta_mov"
+                            autocomplete="off"
+                            class="cursor-pointer text-center text-size-18px"
+                          />
+
+                          <mat-hint class="w-100 text-dark"></mat-hint>
+                          <mat-error
+                            class="text-danger"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formDetails,
+                                'val_cta_mov',
+                                this.formDetailsErrors,
+                                true,
+                                'dataDetails',
+                                index
+                              )
+                            "
+                            >{{ this.formDetailsErrors.val_cta_mov }}</mat-error
+                          >
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="glo_cta_mov">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="
+                          text-size-18px
+                          font-weight-bold
+                          text-dark text-center
+                        "
+                      >
+                        <strong>GLOSA</strong>
+                      </th>
+                      <td
+                        mat-cell
+                        *matCellDef="let row; let index = index"
+                        [formGroupName]="index"
+                        class="pl-2 pr-4"
+                      >
+                        <mat-form-field
+                          appearance="outline"
+                          class="w-100 cursor-pointer pt-3"
+                        >
+                          <input
+                            matInput
+                            type="text"
+                            formControlName="glo_cta_mov"
+                            autocomplete="off"
+                            class="cursor-pointer text-center text-size-18px"
+                          />
+                          <mat-hint class="w-100 text-dark"></mat-hint>
+                          <mat-error
+                            class="text-danger"
+                            *ngIf="
+                              this.father.GroupFormGeneralisControlHasError(
+                                this.formDetails,
+                                'glo_cta_mov',
+                                this.formDetailsErrors,
+                                true,
+                                'dataDetails',
+                                index
+                              )
+                            "
+                            >{{ this.formDetailsErrors.glo_cta_mov }}</mat-error
+                          >
+                        </mat-form-field>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cancel">
+                      <th mat-header-cell *matHeaderCellDef></th>
+                      <td
+                        mat-cell
+                        *matCellDef="let row; let index = index"
+                        [formGroupName]="index"
+                        class="mx-auto"
+                      >
+                        <span
+                          #tooltip="matTooltip"
+                          class="text-center"
+                          matTooltip="Eliminar"
+                          ><img
+                            class="cursor-pointer"
+                            (click)="deleteRow(index)"
+                            src="../../assets/img/file-delete.png"
+                            width="50px"
+                            alt=""
+                        /></span>
+                      </td>
+                    </ng-container>
+                  </table>
+                </div>
+              </form>
+
+              <!-- <pre>{{ formDetails.value | json }}</pre> -->
+            </div>
+          </mat-tab></mat-tab-group
+        >
       </div>
     </div>
   </div>

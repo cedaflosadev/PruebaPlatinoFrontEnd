@@ -2,51 +2,32 @@
   <div class="row justify-content-center uploader-status">
     <div class="col-12 text-center">
       <h3 class="text-dark">
-        <strong>
-          ¿ Desea Agregar el cliente con la siguiente información?</strong
-        >
+        <strong> ¿ Desea eliminar la cuenta {{ data.name_account }}?</strong>
       </h3>
     </div>
   </div>
 
   <div class="row justify-content-center uploader-status">
     <div class="col-6">
-      <span><strong>Cédula</strong></span>
+      <span><strong>Código</strong></span>
     </div>
     <div class="col-6 text-right">
-      <span>{{ data.number_id }}</span>
+      <span>{{ data.id_account }}</span>
     </div>
     <div class="col-6">
-      <span><strong>Nombre</strong></span>
+      <span><strong>Tipo</strong></span>
     </div>
     <div class="col-6 text-right">
-      <span>{{ data.name }}</span>
+      <span>{{ data.id_type_account }}</span>
     </div>
     <div class="col-6">
-      <span><b>Fecha de nacimiento</b></span>
+      <span><strong>Código</strong></span>
     </div>
     <div class="col-6 text-right">
-      <span>{{ data.birthday }}</span>
-    </div>
-    <div class="col-6">
-      <span><b>Correo Electrónico</b></span>
-    </div>
-    <div class="col-6 text-right">
-      <span>{{ data.email }}</span>
-    </div>
-    <div class="col-6">
-      <span><b>Número Celular</b></span>
-    </div>
-    <div class="col-6 text-right">
-      <span>{{ data.phone }}</span>
-    </div>
-    <div class="col-6">
-      <span><b>Dirección</b></span>
-    </div>
-    <div class="col-6 text-right">
-      <span>{{ data.address }}</span>
+      <span>{{ data.name_account }}</span>
     </div>
   </div>
+
   <div class="row justify-content-end uploader-status">
     <div class="col-6 col-lg-3 col-md-6">
       <button

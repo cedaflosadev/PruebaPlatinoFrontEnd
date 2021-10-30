@@ -19,6 +19,7 @@ import { UpgradeComponent } from "./upgrade/upgrade.component";
 import { AgmCoreModule } from "@agm/core";
 import { AdminLayoutComponent } from "./layouts/admin-layout/admin-layout.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MAT_DATE_LOCALE } from "@angular/material/core";
 
 @NgModule({
   imports: [
@@ -30,12 +31,13 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     RouterModule,
     AppRoutingModule,
     MatProgressSpinnerModule,
+
     AgmCoreModule.forRoot({
       apiKey: "YOUR_GOOGLE_MAPS_API_KEY",
     }),
   ],
   declarations: [AppComponent, AdminLayoutComponent],
-  providers: [],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: "en-GB" }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
